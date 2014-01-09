@@ -4,7 +4,7 @@ usage()
 {
     echo -e ""
     echo -e ${txtbld}"Usage:"${txtrst}
-    echo -e "  build-pac.sh [options] device"
+    echo -e "  build-famigo.sh [options] device"
     echo -e ""
     echo -e ${txtbld}"  Options:"${txtrst}
     echo -e "    -c  Clean before build"
@@ -16,20 +16,20 @@ usage()
     echo -e "    -p  Build using pipe"
     echo -e ""
     echo -e ${txtbld}"  Example:"${txtrst}
-    echo -e "    ./build-pac.sh -c mako"
+    echo -e "    ./build-famigo.sh -c mako"
     echo -e ""
     exit 1
 }
 
 # colors
-. ./vendor/pac/tools/colors
+. ./vendor/famigo/tools/colors
 
 if [ ! -d ".repo" ]; then
     echo -e ${red}"No .repo directory found.  Is this an Android build tree?"${txtrst}
     exit 1
 fi
-if [ ! -d "vendor/pac" ]; then
-    echo -e ${red}"No vendor/pac directory found.  Is this a PAC build tree?"${txtrst}
+if [ ! -d "vendor/famigo" ]; then
+    echo -e ${red}"No vendor/pac directory found.  Is this a Famigo build tree?"${txtrst}
     exit 1
 fi
 
@@ -102,7 +102,7 @@ fi
 device="$1"
 
 # get current version
-eval $(grep "^PAC_VERSION_" vendor/pac/config/pac_common.mk | sed 's/ *//g')
+eval $(grep "^PAC_VERSION_" vendor/famigo/config/pac_common.mk | sed 's/ *//g')
 VERSION="$PAC_VERSION_MAJOR.$PAC_VERSION_MINOR.$PAC_VERSION_MAINTENANCE"
 
 echo -e ${cya}"Building ${bldgrn}P ${bldppl}A ${bldblu}C ${bldylw}v$VERSION"${txtrst}
@@ -110,7 +110,7 @@ echo -e ${cya}"Building ${bldgrn}P ${bldppl}A ${bldblu}C ${bldylw}v$VERSION"${tx
 # PAC device dependencies
 echo -e ""
 echo -e ${bldblu}"Looking for PAC product dependencies${txtrst}"${cya}
-vendor/pac/tools/getdependencies.py "$device"
+vendor/famigo/tools/getdependencies.py "$device"
 echo -e "${txtrst}"
 
 if [ "$opt_clean" -ne 0 ]; then
@@ -137,7 +137,7 @@ rm -f $OUTDIR/target/product/$device/obj/KERNEL_OBJ/.version
 
 # fetch cherry-picks
 if [ "$opt_fetch" -ne 0 ]; then
-        ./vendor/pac/tools/cherries.sh $device
+        ./vendor/famigo/tools/cherries.sh $device
 fi
 
 # get time of startup
@@ -178,7 +178,7 @@ make -j"$opt_jobs" bacon
 echo -e ""
 
 # squisher
-vendor/pac/tools/squisher
+vendor/famigo/tools/squisher
 
 # cleanup unused built
 rm -f $OUTDIR/target/product/$device/cm-*.*
